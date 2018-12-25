@@ -13,7 +13,6 @@ spec:
       metricSelector:
         matchLabels:
           # define labels to target
-          #resource.labels.subscription_id: echo-read
           metric.labels.consumergroup: golang-consumer
       # scale +1 whenever it crosses multiples of mentioned value
       targetAverageValue: "1000"
