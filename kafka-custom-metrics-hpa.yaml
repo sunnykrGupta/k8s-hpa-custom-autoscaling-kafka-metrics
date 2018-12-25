@@ -1,0 +1,28 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: consumer-kafka-go-client
+spec:
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: External
+    external:
+      # which metrics to read from stackdriver
+      metricName: custom.googleapis.com|kafka-exporter|kafka_consumergroup_lag_sum
+      metricSelector:
+        matchLabels:
+          # define labels to target
+          #resource.labels.subscription_id: echo-read
+          metric.labels.consumergroup: golang-consumer
+      # scale +1 whenever it crosses multiples of mentioned value
+      targetAverageValue: "1000"
+  # define deployment to control
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: consumer-kafka-go-client
+
+# https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-metrics-not-related-to-kubernetes-objects
+
+# # https://cloud.google.com/kubernetes-engine/docs/tutorials/external-metrics-autoscaling#step2

@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: consumer-kafka-go-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      lang: golang
+      kafka: consumer
+  template:
+    metadata:
+      labels:
+        lang: golang
+        kafka: consumer
+    spec:
+      containers:
+      - name: consumer-kafka-go-client
+        image: gcr.io/<gcp-project>/kafka-client:1.1
+        command:
+        - ./consumer
+        - my-kafka-broker-1:9092,my-kafka-broker-2:9092
+        - custom-topic
+        - golang-consumer
+        - "100"
+        # WaitMs
+        - "2000"
+        - plaintext
+        resources:
+          limits:
+            cpu: 50m
+            memory: 300Mi

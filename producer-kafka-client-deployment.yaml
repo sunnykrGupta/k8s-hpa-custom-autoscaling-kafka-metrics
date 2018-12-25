@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: producer-kafka-go-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      lang: golang
+      kafka: producer
+  template:
+    metadata:
+      labels:
+        lang: golang
+        kafka: producer
+    spec:
+      containers:
+      - name: producer-kafka-go-client
+        image: gcr.io/<gcp-project>/kafka-client:1.1
+        command:
+        - ./producer
+        - my-kafka-broker-1:9092,my-kafka-broker-2:9092
+        - custom-topic
+        - "100"
+        - "10000"
+        - none
+        - "1000"
+        # WaitMs
+        - "2000"
+        - plaintext
